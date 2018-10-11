@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <title>Til kabelo, NT love</title>
+    <link href="https://fonts.googleapis.com/css?family=Merriweather+Sans" rel="stylesheet">
+  </head>
+  <style>
+    html,
+    body {
+      height: 100%;
+    }
+
+    body {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    div {
+      font-family: 'Merriweather Sans', sans-serif;
+      text-transform: uppercase;
+      font-size: 3em;
+      letter-spacing: 10px;
+    }
+
+  </style>
+  <script>
+    var rgb = [255, 0, 0];
+
+    function updateContent() {
+      // Set current weekday, for instance "Thursday"
+      document.querySelector('div').innerText = new Date().toLocaleDateString('en-US', {
+        weekday: 'long'
+      });
+
+      // Set random background and text color
+      setContrast();
+    }
+
+    function updateContentRecurring() {
+      updateContent();
+
+      // Run again in 24 hours
+      setTimeout(updateContentRecurring, 24 * 60 * 60 * 1000);
+    }
+
+    // Sets a random background, alongside a contrasting text-color, so it always will be readable
+    // (Stolen from https://stackoverflow.com/a/11868159)
+    function setContrast() {
+      // randomly update
+      rgb[0] = Math.round(Math.random() * 255);
+      rgb[1] = Math.round(Math.random() * 255);
+      rgb[2] = Math.round(Math.random() * 255);
+
+      // http://www.w3.org/TR/AERT#color-contrast
+      var o = Math.round(((parseInt(rgb[0]) * 299) +
+        (parseInt(rgb[1]) * 587) +
+        (parseInt(rgb[2]) * 114)) / 1000);
+      var fore = (o > 125) ? 'black' : 'white';
+      var back = 'rgb(' + rgb[0] + ',' + rgb[1] + ',' + rgb[2] + ')';
+
+      document.querySelector('div').style.color = fore;
+      document.body.style.backgroundColor = back;
+    }
+
+    // Start the magic for now ..
+    setTimeout(updateContent, 0);
+
+    // We need to run an update the next time we hit midnight (00:00)
+    var now = new Date();
+    var elapsedSinceMidnight = ((23 - now.getHours()) * 60 + (60 - now.getMinutes())) * 60 * 1000;
+    var timeUntillNextMidnight = new Date(now.getTime() + elapsedSinceMidnight);
+    setTimeout(updateContentRecurring, timeUntillNextMidnight);
+
+  </script>
+
+  <body>
+    <div>
+      Javascript error :(
+    </div>
+  </body>
+
+</html>
