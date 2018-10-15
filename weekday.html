@@ -69,11 +69,19 @@
 
     // We need to run an update the next time we hit midnight (00:00)
     var now = new Date();
-    var elapsedSinceMidnight = ((23 - now.getHours()) * 60 + (60 - now.getMinutes())) * 60 * 1000;
-    var dateForNextMidnight = new Date(now.getTime() + elapsedSinceMidnight);
-    var timeUntillNextMidnight = dateForNextMidnight.getTime() - new Date().getTime();
+    var hoursRemainingInMiliseconds = (23 - now.getHours()) * 60 * 60 * 1000;
+    var minutesRemainingInMiliseconds = (59 - now.getMinutes()) * 60 * 1000;
+    var secondsRemainingInMiliseconds = (60 - now.getSeconds()) * 1000; // We're using 60 instead of 59 because we're 
+                                                                        // to lazy to include remaining miliseconds
+    var timeUntillNextMidnight = hoursRemainingInMiliseconds + minutesRemainingInMiliseconds + secondsRemainingInMiliseconds;
 
     setTimeout(updateContentRecurring, timeUntillNextMidnight);
+
+    // Debugging
+    if (window.console) {
+      dateForNextMidnight = new Date(timeUntillNextMidnight);
+      console.log(dateForNextMidnight.getHours() + " hours, " + dateForNextMidnight.getMinutes() + " minutes and " + dateForNextMidnight.getSeconds() + " seconds to first refresh"); 
+    }
 
   </script>
 
