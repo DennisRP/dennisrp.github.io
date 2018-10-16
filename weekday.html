@@ -68,12 +68,20 @@
     setTimeout(updateContent, 0);
 
     // We need to run an update the next time we hit midnight (00:00)
+    // Warning -- There is a bug currently. new Date() will be created using the local timezone but when 
+    // we substract now and nextMidnight, Javascript will do some magic and not apply timezones
+    // The update time can fluctuate by some hours because of this
     var now = new Date();
-    var elapsedSinceMidnight = ((23 - now.getHours()) * 60 + (60 - now.getMinutes())) * 60 * 1000;
-    var dateForNextMidnight = new Date(now.getTime() + elapsedSinceMidnight);
-    var timeUntillNextMidnight = dateForNextMidnight.getTime() - new Date().getTime();
+    var nextMidnight = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1);
+    var timeUntillNextMidnight = nextMidnight - now;
 
     setTimeout(updateContentRecurring, timeUntillNextMidnight);
+
+    // Debugging
+    if (window.console) {
+      dateForNextMidnight = new Date(timeUntillNextMidnight);
+      console.log(dateForNextMidnight.getHours() + " hours, " + dateForNextMidnight.getMinutes() + " minutes and " + dateForNextMidnight.getSeconds() + " seconds to first refresh"); 
+    }
 
   </script>
 
